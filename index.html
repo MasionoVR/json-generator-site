@@ -1,1 +1,143 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item JSON Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: #2e2e2e;
+            padding: 40px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        select, input[type="range"], button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .value {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Customize Your Item</h1>
+        <label for="item">Item</label>
+        <select id="item"></select>
+
+        <label for="hue">Hue (<span id="hueVal">0</span>)</label>
+        <input type="range" id="hue" min="0" max="240" value="0" oninput="updateValue('hue')">
+
+        <label for="saturation">Saturation (<span id="saturationVal">0</span>)</label>
+        <input type="range" id="saturation" min="-124" max="124" value="0" oninput="updateValue('saturation')">
+
+        <label for="scale">Size (<span id="scaleVal">0</span>)</label>
+        <input type="range" id="scale" min="-127" max="127" value="0" oninput="updateValue('scale')">
+
+        <button onclick="downloadJSON()">Download JSON</button>
+    </div>
+
+    <script>
+        const items = [
+            "Apple", "Company Ration", "Company Ration Heal", "Cracker", "Heart Chocolate Box",
+            "Mega Broccoli", "Micro Broccoli", "Pumpkin Pie", "Stinky Cheese", "Turkey Leg",
+            "Turkey Whole", "Banana", "Large Banana", "Cola", "Large Cola", "Pizza", "Backpack",
+            "Large Backpack", "Large Basketball Print Backpack", "Large Clover Print Backpack",
+            "Small Backpack", "Quiver", "Heart Quiver", "Nut Shredder", "Black Backpack", "Green Backpack",
+            "Pink Backpack", "White Backpack", "Backpack with Flashlight", "Baseball Bat", "Crossbow",
+            "Heart Crossbow", "Crowbar", "Flaregun", "Frying Pan", "Heart Gun", "Lance", "Ogre Hands",
+            "Pickaxe", "Golded Pickaxe", "Cube Pickaxe", "Police Baton (Crowbar)", "Revolver", "RPG",
+            "Rocket Dragon RPG", "Easter RPG", "Shield", "Protective Bone Shield", "Police Shield", "Shotgun",
+            "Snowball", "Arm Bones (Stick)", "Bone (Stick)", "Tree Stick", "Arrow", "Heart Arrow",
+            "Lightbulb Arrow", "Revolver Ammo", "RPG Rocket", "Shotgun Ammo", "Rope", "Boombox", "Box Fan",
+            "Disposable Camera", "Flashlight", "Mega Flashlight", "Glowstick", "Hookshot", "Hoverpad",
+            "Jetpack", "Plunger", "Saddle", "Sticker Dispenser", "Tablet", "Tele Grenade", "Umbrella",
+            "Clover Umbrella", "Zipline Gun", "Balloon", "Heart Balloon", "Clapper", "Football", "Pogostick",
+            "Rubber Ducky", "Theremin", "Whoopie", "Cluster Grenade", "Dynamite", "Cube Dynamite", "Flashbang",
+            "Impact Grenade", "Impulse Grenade", "Sticky Dynamite", "Tripwire Explosive", "Cardboard Box",
+            "Cash", "Cash Pile", "Cash Mega Pile", "Calculator", "DVD", "Floppy Disc 3", "Floppy Disc 5",
+            "Keycard", "Mug", "Cinder", "Paper", "Mob Weapons Loot Box", "Scissors", "Stapler",
+            "Tape Dispenser", "Time Bomb", "Cup", "Golden Cup", "Sticker Bomb", "Crate", "Egg", "Red Flashlight",
+            "Gold Bar", "Heart Chunk", "Haunted House Key", "Gold Revolver", "Big Cup", "Nut", "Painting Canvas",
+            "Pelican Case (Suitcase)", "Pipe", "Pumpkin Jack", "Small Pumpkin Jack", "Big Mob Loot Box",
+            "Mob Loot Box", "Small Mob Loot Box", "Scanner", "Toilet Paper", "Mega Toilet Paper",
+            "Empty Toilet Paper Roll", "Trophy", "Unknown Item", "Upsidedown Loot", "Large Uranium Chunk",
+            "Uranium Chunk", "Small Uranium Chunk", "Ruby", "Large Silver Chunk", "Silver Chunk",
+            "Small Silver Chunk", "Large Copper Chunk", "Copper Chunk", "Small Copper Chunk",
+            "Large Gold Chunk", "Gold Chunk", "Small Gold Chunk"
+        ];
+
+        const select = document.getElementById('item');
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.toLowerCase().replace(/ /g, "_").replace(/[()]/g, "");
+            option.text = item;
+            select.appendChild(option);
+        });
+
+        function updateValue(id) {
+            document.getElementById(id + 'Val').textContent = document.getElementById(id).value;
+        }
+
+        function downloadJSON() {
+            const item = document.getElementById("item").value;
+            const hue = parseInt(document.getElementById("hue").value);
+            const saturation = parseInt(document.getElementById("saturation").value);
+            const scale = parseInt(document.getElementById("scale").value);
+
+            const json = {
+                version: 1,
+                items: [
+                    {
+                        itemID: "item_backpack_large_base",
+                        children: [
+                            {
+                                itemID: "item_heart_gun",
+                                children: [
+                                    {
+                                        itemID: "item_backpack_large_base",
+                                        children: [
+                                            {
+                                                itemID: "item_heart_gun",
+                                                children: [
+                                                    {
+                                                        itemID: item,
+                                                        colorHue: hue,
+                                                        colorSaturation: saturation,
+                                                        scaleModifier: scale
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        stashPos: 0
+                    }
+                ]
+            };
+
+            const blob = new Blob([JSON.stringify(json, null, 4)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "custom_item.json";
+            link.click();
+        }
+    </script>
+</body>
+</html>
