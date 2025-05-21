@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>444 Json Generator!</title>
+  <title>Masiono's 444 Json Converter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -24,7 +24,7 @@
       border-radius: 5px;
     }
     .scrollbox {
-      max-height: 200px;
+      max-height: 300px;
       overflow-y: auto;
       border: 1px solid #444;
       padding: 10px;
@@ -35,10 +35,10 @@
       display: block;
       margin-bottom: 5px;
     }
-    .controls {
+    .controls, .row {
       display: flex;
-      align-items: center;
       gap: 10px;
+      align-items: center;
     }
     #colorPreview {
       width: 100%;
@@ -47,8 +47,6 @@
       background: hsl(0, 0%, 50%);
     }
     .row {
-      display: flex;
-      gap: 10px;
       margin-top: 10px;
     }
     .row button {
@@ -60,20 +58,36 @@
 </head>
 <body>
 <div class="container">
-  <h2>Mobile JSON Generator</h2>
+  <h2>Masiono's 444 Json Converter</h2>
 
   <label>Select Items:</label>
   <div class="scrollbox" id="itemList">
     <label><input type="checkbox" value="item_apple"> Apple</label>
+    <label><input type="checkbox" value="item_company_ration"> Company Ration</label>
+    <label><input type="checkbox" value="item_company_ration_heal"> Company Ration Heal</label>
+    <label><input type="checkbox" value="item_cracker"> Cracker</label>
+    <label><input type="checkbox" value="item_heart_chocolate_box"> Heart Chocolate Box</label>
+    <label><input type="checkbox" value="item_mega_broccoli"> Mega Broccoli</label>
+    <label><input type="checkbox" value="item_micro_broccoli"> Micro Broccoli</label>
     <label><input type="checkbox" value="item_pumpkin_pie"> Pumpkin Pie</label>
+    <label><input type="checkbox" value="item_stinky_cheese"> Stinky Cheese</label>
+    <label><input type="checkbox" value="item_turkey_leg"> Turkey Leg</label>
+    <label><input type="checkbox" value="item_turkey_whole"> Turkey Whole</label>
+    <label><input type="checkbox" value="item_banana"> Banana</label>
+    <label><input type="checkbox" value="item_large_banana"> Large Banana</label>
+    <label><input type="checkbox" value="item_cola"> Cola</label>
+    <label><input type="checkbox" value="item_large_cola"> Large Cola</label>
+    <label><input type="checkbox" value="item_pizza"> Pizza</label>
+    <label><input type="checkbox" value="item_backpack"> Backpack</label>
+    <label><input type="checkbox" value="item_backpack_large"> Large Backpack</label>
+    <label><input type="checkbox" value="item_nut_shredder"> Nut Shredder</label>
+    <label><input type="checkbox" value="item_heart_gun"> Heart Gun (Raygun)</label>
     <label><input type="checkbox" value="item_pelican_case"> Pelican Case (Suitcase)</label>
     <label><input type="checkbox" value="item_time_bomb"> Time Bomb</label>
     <label><input type="checkbox" value="item_gold_revolver"> Gold Revolver</label>
     <label><input type="checkbox" value="item_egg"> Egg</label>
-    <label><input type="checkbox" value="item_nut_shredder"> Nut Shredder</label>
     <label><input type="checkbox" value="item_ruby"> Ruby</label>
-    <label><input type="checkbox" value="item_pizza"> Pizza</label>
-    <label><input type="checkbox" value="item_mega_broccoli"> Mega Broccoli</label>
+    <!-- continue with the full list... -->
   </div>
 
   <label>Hue: <span id="hueVal">0</span></label>
@@ -114,34 +128,28 @@ function updateValue(id) {
   document.getElementById(id + 'Val').textContent = document.getElementById(id).value;
   updateColorPreview();
 }
-
 function updateColorPreview() {
   const hue = parseInt(document.getElementById("hue").value);
   const sat = parseInt(document.getElementById("saturation").value);
   const scaledSat = Math.round(((sat + 124) / 248) * 100);
   document.getElementById("colorPreview").style.backgroundColor = `hsl(${hue}, ${scaledSat}%, 50%)`;
 }
-
 function randomHue() {
   document.getElementById("hue").value = Math.floor(Math.random() * 241);
   updateValue("hue");
 }
-
 function randomSaturation() {
   document.getElementById("saturation").value = Math.floor(Math.random() * 249) - 124;
   updateValue("saturation");
 }
-
 function randomScale() {
   document.getElementById("scale").value = Math.floor(Math.random() * 255) - 127;
   updateValue("scale");
 }
-
 function randomStuff() {
-  document.querySelectorAll('#itemList input').forEach(cb => cb.checked = Math.random() < 0.4);
+  document.querySelectorAll('#itemList input').forEach(cb => cb.checked = Math.random() < 0.3);
   randomHue(); randomSaturation(); randomScale();
 }
-
 function downloadJSON() {
   const hue = parseInt(document.getElementById("hue").value);
   const saturation = parseInt(document.getElementById("saturation").value);
