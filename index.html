@@ -35,24 +35,22 @@
       display: block;
       margin-bottom: 5px;
     }
-    .controls, .row {
+    .row {
       display: flex;
       gap: 10px;
       align-items: center;
-    }
-    #colorPreview {
-      width: 100%;
-      height: 40px;
-      border-radius: 5px;
-      background: hsl(0, 0%, 50%);
-    }
-    .row {
       margin-top: 10px;
     }
     .row button {
       flex-shrink: 0;
       width: 40px;
       height: 40px;
+    }
+    #colorPreview {
+      width: 100%;
+      height: 40px;
+      border-radius: 5px;
+      background: hsl(0, 0%, 50%);
     }
   </style>
 </head>
@@ -196,8 +194,6 @@
 <label><input type="checkbox" value="item_scanner"> Scanner</label>
 <label><input type="checkbox" value="item_toilet_paper"> Toilet Paper</label>
 <label><input type="checkbox" value="item_mega_toilet_paper"> Mega Toilet Paper</label>
-<label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
-<label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
 <label><input type="checkbox" value="item_empty_toilet_paper_roll"> Empty Toilet Paper Roll</label>
 <label><input type="checkbox" value="item_trophy"> Trophy</label>
 <label><input type="checkbox" value="item_unknown_item"> Unknown Item</label>
@@ -215,6 +211,9 @@
 <label><input type="checkbox" value="item_large_gold_chunk"> Large Gold Chunk</label>
 <label><input type="checkbox" value="item_gold_chunk"> Gold Chunk</label>
 <label><input type="checkbox" value="item_small_gold_chunk"> Small Gold Chunk</label>
+<label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
+<label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
+
   </div>
 
   <label>Hue: <span id="hueVal">0</span></label>
@@ -235,8 +234,15 @@
     <button onclick="randomScale()">🎲</button>
   </div>
 
-  <label for="count">Number of Backpacks</label>
-  <input type="number" id="count" min="1" max="500" value="1">
+  <label>Rayguns per Backpack: <span id="raygunCountVal">1</span></label>
+  <div class="row">
+    <input type="range" id="raygunCount" min="1" max="28" value="1" oninput="updateValue('raygunCount')">
+  </div>
+
+  <label>Backpacks: <span id="countVal">1</span></label>
+  <div class="row">
+    <input type="range" id="count" min="1" max="28" value="1" oninput="updateValue('count')">
+  </div>
 
   <label for="filename">Download As</label>
   <input type="text" id="filename" value="custom_items">
@@ -281,28 +287,34 @@ function downloadJSON() {
   const hue = parseInt(document.getElementById("hue").value);
   const saturation = parseInt(document.getElementById("saturation").value);
   const scale = parseInt(document.getElementById("scale").value);
-  const count = Math.min(parseInt(document.getElementById("count").value), 500);
+  const raygunCount = parseInt(document.getElementById("raygunCount").value);
+  const count = parseInt(document.getElementById("count").value);
   const filename = document.getElementById("filename").value || "custom_items";
   const selected = Array.from(document.querySelectorAll('#itemList input:checked')).map(cb => cb.value);
 
-  const innerItems = selected.map(item => ({
-    itemID: "item_heart_gun",
-    children: [
-      {
-        itemID: item,
-        colorHue: hue,
-        colorSaturation: saturation,
-        scaleModifier: scale
-      }
-    ]
-  }));
+  const rays = [];
+  for (let i = 0; i < raygunCount; i++) {
+    for (const item of selected) {
+      rays.push({
+        itemID: "item_heart_gun",
+        children: [
+          {
+            itemID: item,
+            colorHue: hue,
+            colorSaturation: saturation,
+            scaleModifier: scale
+          }
+        ]
+      });
+    }
+  }
 
   const raygunWithBackpack = {
     itemID: "item_heart_gun",
     children: [
       {
         itemID: "item_backpack_large_base",
-        children: innerItems
+        children: rays
       }
     ]
   };
