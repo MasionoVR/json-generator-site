@@ -1,199 +1,194 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Advanced JSON Generator</title>
+  <title>Mobile JSON Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #1e1e1e;
       color: white;
-      text-align: center;
-      padding: 50px;
+      padding: 20px;
     }
     .container {
+      max-width: 600px;
+      margin: auto;
       background: #2e2e2e;
-      padding: 40px;
+      padding: 20px;
       border-radius: 10px;
-      display: inline-block;
     }
-    select, input[type="range"], input[type="number"], input[type="text"] {
-      margin-top: 10px;
+    label, input, select, button {
       width: 100%;
+      margin-top: 10px;
       padding: 10px;
       border-radius: 5px;
     }
-    label {
+    .scrollbox {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #444;
+      padding: 10px;
+      background: #1a1a1a;
+      border-radius: 5px;
+    }
+    .scrollbox label {
       display: block;
-      margin-top: 20px;
-      font-weight: bold;
+      margin-bottom: 5px;
     }
     .controls {
       display: flex;
-      gap: 5px;
       align-items: center;
-    }
-    .button-small {
-      padding: 6px 10px;
-      font-size: 12px;
-      width: auto;
+      gap: 10px;
     }
     #colorPreview {
       width: 100%;
       height: 40px;
       border-radius: 5px;
-      margin-top: 10px;
       background: hsl(0, 0%, 50%);
     }
-    .button-row {
+    .row {
       display: flex;
-      justify-content: center;
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
-    button {
-      padding: 10px 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .row button {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Advanced JSON Generator</h1>
+<div class="container">
+  <h2>Mobile JSON Generator</h2>
 
-    <label for="item">Items (Ctrl/Cmd to select multiple)</label>
-    <select id="item" multiple size="10"></select>
-
-    <label for="hue">Hue (<span id="hueVal">0</span>)</label>
-    <div class="controls">
-      <input type="range" id="hue" min="0" max="240" value="0" oninput="updateValue('hue')">
-      <button class="button-small" onclick="randomHue()">🎨 Random</button>
-    </div>
-
-    <label for="saturation">Saturation (<span id="saturationVal">0</span>)</label>
-    <div class="controls">
-      <input type="range" id="saturation" min="-124" max="124" value="0" oninput="updateValue('saturation')">
-      <button class="button-small" onclick="randomSaturation()">🎨 Random</button>
-    </div>
-
-    <label for="scale">Size (<span id="scaleVal">0</span>)</label>
-    <div class="controls">
-      <input type="range" id="scale" min="-127" max="127" value="0" oninput="updateValue('scale')">
-      <button class="button-small" onclick="randomScale()">🎲 Random</button>
-    </div>
-
-    <label for="count">Number of Backpacks</label>
-    <input type="number" id="count" min="1" max="500" value="1">
-
-    <label for="filename">Download As</label>
-    <input type="text" id="filename" value="custom_items">
-
-    <label>Color Preview</label>
-    <div id="colorPreview"></div>
-
-    <div class="button-row">
-      <button onclick="downloadJSON()">Download JSON</button>
-      <button onclick="randomStuff()" title="Randomize everything"
-        style="width: 40px; height: 40px; padding: 0; font-size: 18px;">🎲</button>
-    </div>
+  <label>Select Items:</label>
+  <div class="scrollbox" id="itemList">
+    <label><input type="checkbox" value="item_apple"> Apple</label>
+    <label><input type="checkbox" value="item_pumpkin_pie"> Pumpkin Pie</label>
+    <label><input type="checkbox" value="item_pelican_case"> Pelican Case (Suitcase)</label>
+    <label><input type="checkbox" value="item_time_bomb"> Time Bomb</label>
+    <label><input type="checkbox" value="item_gold_revolver"> Gold Revolver</label>
+    <label><input type="checkbox" value="item_egg"> Egg</label>
+    <label><input type="checkbox" value="item_nut_shredder"> Nut Shredder</label>
+    <label><input type="checkbox" value="item_ruby"> Ruby</label>
+    <label><input type="checkbox" value="item_pizza"> Pizza</label>
+    <label><input type="checkbox" value="item_mega_broccoli"> Mega Broccoli</label>
   </div>
 
-  <script>
-    const items = [
-      "Apple", "Pumpkin Pie", "Pelican Case (Suitcase)", "Time Bomb", "Gold Revolver",
-      "Egg", "Nut Shredder", "Ruby", "Pizza", "Mega Broccoli"
-    ];
+  <label>Hue: <span id="hueVal">0</span></label>
+  <div class="row">
+    <input type="range" id="hue" min="0" max="240" value="0" oninput="updateValue('hue')">
+    <button onclick="randomHue()">🎨</button>
+  </div>
 
-    const select = document.getElementById("item");
-    items.forEach(item => {
-      const option = document.createElement("option");
-      option.value = "item_" + item.toLowerCase().replace(/[^a-z0-9]/g, "_");
-      option.text = item;
-      select.appendChild(option);
-    });
+  <label>Saturation: <span id="saturationVal">0</span></label>
+  <div class="row">
+    <input type="range" id="saturation" min="-124" max="124" value="0" oninput="updateValue('saturation')">
+    <button onclick="randomSaturation()">🎨</button>
+  </div>
 
-    function updateValue(id) {
-      document.getElementById(id + 'Val').textContent = document.getElementById(id).value;
-      updateColorPreview();
-    }
+  <label>Size: <span id="scaleVal">0</span></label>
+  <div class="row">
+    <input type="range" id="scale" min="-127" max="127" value="0" oninput="updateValue('scale')">
+    <button onclick="randomScale()">🎲</button>
+  </div>
 
-    function updateColorPreview() {
-      const hue = parseInt(document.getElementById("hue").value);
-      const sat = parseInt(document.getElementById("saturation").value);
-      const scaledSat = Math.round(((sat + 124) / 248) * 100);
-      document.getElementById("colorPreview").style.backgroundColor = `hsl(${hue}, ${scaledSat}%, 50%)`;
-    }
+  <label for="count">Number of Backpacks</label>
+  <input type="number" id="count" min="1" max="500" value="1">
 
-    function randomHue() {
-      document.getElementById("hue").value = Math.floor(Math.random() * 241);
-      updateValue("hue");
-    }
+  <label for="filename">Download As</label>
+  <input type="text" id="filename" value="custom_items">
 
-    function randomSaturation() {
-      document.getElementById("saturation").value = Math.floor(Math.random() * 249) - 124;
-      updateValue("saturation");
-    }
+  <label>Color Preview</label>
+  <div id="colorPreview"></div>
 
-    function randomScale() {
-      document.getElementById("scale").value = Math.floor(Math.random() * 255) - 127;
-      updateValue("scale");
-    }
+  <div class="row" style="justify-content: space-between;">
+    <button onclick="downloadJSON()">Download</button>
+    <button onclick="randomStuff()">🎲</button>
+  </div>
+</div>
 
-    function randomStuff() {
-      const options = document.querySelectorAll('#item option');
-      options.forEach(opt => opt.selected = Math.random() < 0.4);
-      randomHue(); randomSaturation(); randomScale();
-    }
+<script>
+function updateValue(id) {
+  document.getElementById(id + 'Val').textContent = document.getElementById(id).value;
+  updateColorPreview();
+}
 
-    function downloadJSON() {
-      const selected = Array.from(document.getElementById("item").selectedOptions).map(o => o.value);
-      const hue = parseInt(document.getElementById("hue").value);
-      const saturation = parseInt(document.getElementById("saturation").value);
-      const scale = parseInt(document.getElementById("scale").value);
-      const count = Math.min(parseInt(document.getElementById("count").value), 500);
-      const filename = document.getElementById("filename").value || "custom_items";
+function updateColorPreview() {
+  const hue = parseInt(document.getElementById("hue").value);
+  const sat = parseInt(document.getElementById("saturation").value);
+  const scaledSat = Math.round(((sat + 124) / 248) * 100);
+  document.getElementById("colorPreview").style.backgroundColor = `hsl(${hue}, ${scaledSat}%, 50%)`;
+}
 
-      const innerItems = selected.map(item => ({
-        itemID: "item_heart_gun",
-        children: [
-          {
-            itemID: item,
-            colorHue: hue,
-            colorSaturation: saturation,
-            scaleModifier: scale
-          }
-        ]
-      }));
+function randomHue() {
+  document.getElementById("hue").value = Math.floor(Math.random() * 241);
+  updateValue("hue");
+}
 
-      const raygunWithBackpack = {
-        itemID: "item_heart_gun",
-        children: [
-          {
-            itemID: "item_backpack_large_base",
-            children: innerItems
-          }
-        ]
-      };
+function randomSaturation() {
+  document.getElementById("saturation").value = Math.floor(Math.random() * 249) - 124;
+  updateValue("saturation");
+}
 
-      const outerStructure = {
-        version: 1,
-        items: [
-          {
-            itemID: "item_backpack_large_base",
-            children: Array(count).fill(raygunWithBackpack),
-            stashPos: 0
-          }
-        ]
-      };
+function randomScale() {
+  document.getElementById("scale").value = Math.floor(Math.random() * 255) - 127;
+  updateValue("scale");
+}
 
-      const blob = new Blob([JSON.stringify(outerStructure, null, 4)], { type: "application/json" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename + ".json";
-      link.click();
-    }
-  </script>
+function randomStuff() {
+  document.querySelectorAll('#itemList input').forEach(cb => cb.checked = Math.random() < 0.4);
+  randomHue(); randomSaturation(); randomScale();
+}
+
+function downloadJSON() {
+  const hue = parseInt(document.getElementById("hue").value);
+  const saturation = parseInt(document.getElementById("saturation").value);
+  const scale = parseInt(document.getElementById("scale").value);
+  const count = Math.min(parseInt(document.getElementById("count").value), 500);
+  const filename = document.getElementById("filename").value || "custom_items";
+  const selected = Array.from(document.querySelectorAll('#itemList input:checked')).map(cb => cb.value);
+
+  const innerItems = selected.map(item => ({
+    itemID: "item_heart_gun",
+    children: [
+      {
+        itemID: item,
+        colorHue: hue,
+        colorSaturation: saturation,
+        scaleModifier: scale
+      }
+    ]
+  }));
+
+  const raygunWithBackpack = {
+    itemID: "item_heart_gun",
+    children: [
+      {
+        itemID: "item_backpack_large_base",
+        children: innerItems
+      }
+    ]
+  };
+
+  const output = {
+    version: 1,
+    items: [
+      {
+        itemID: "item_backpack_large_base",
+        children: Array(count).fill(raygunWithBackpack),
+        stashPos: 0
+      }
+    ]
+  };
+
+  const blob = new Blob([JSON.stringify(output, null, 4)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename + ".json";
+  link.click();
+}
+</script>
 </body>
 </html>
