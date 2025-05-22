@@ -340,6 +340,7 @@ function downloadJSON() {
   const backpackCount = parseInt(document.getElementById("backpackCount").value);
   const raygunsWithItems = [];
 
+  // Build rayguns with selected item children
   tabs.forEach(tab => {
     const itemID = tab.querySelector(".itemID").value;
     const hue = parseInt(tab.querySelector(".hue").value);
@@ -367,22 +368,26 @@ function downloadJSON() {
     raygunBlock.push(...raygunsWithItems);
   }
 
-  const nestedBackpack = {
-    itemID: "item_heart_gun",
-    children: [
-      {
-        itemID: "item_backpack_large_base",
-        children: raygunBlock
-      }
-    ]
-  };
+  // Create N backpacks that go inside one top-level backpack
+  const backpackChildren = [];
+  for (let i = 0; i < backpackCount; i++) {
+    backpackChildren.push({
+      itemID: "item_heart_gun",
+      children: [
+        {
+          itemID: "item_backpack_large_base",
+          children: raygunBlock
+        }
+      ]
+    });
+  }
 
   const output = {
     version: 1,
     items: [
       {
         itemID: "item_backpack_large_base",
-        children: Array(backpackCount).fill(nestedBackpack),
+        children: backpackChildren,
         stashPos: 0
       }
     ]
