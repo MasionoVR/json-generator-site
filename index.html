@@ -22,10 +22,10 @@
       flex: 1;
     }
     .preview {
-      width: 300px;
+      width: 350px;
       max-height: 90vh;
       overflow-y: auto;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       padding: 10px;
       border-radius: 10px;
     }
@@ -58,26 +58,28 @@
       width: 40px;
       height: 40px;
     }
-    #colorPreview {
-      width: 100%;
-      height: 40px;
+    .tab {
+      background: #222;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .tab h4 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .tab .colorPreview {
+      height: 30px;
       border-radius: 5px;
-      background: hsl(0, 0%, 50%);
+      background: gray;
+      margin-top: 8px;
     }
     #searchInput {
       width: 80%;
       margin: 10px auto;
       display: block;
       font-size: 18px;
-    }
-    .tab {
-      background: #222;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-    .tab h4 {
-      margin-top: 0;
     }
     .download-button {
       font-size: 16px;
@@ -91,8 +93,8 @@
 <div class="container">
   <h2>Masiono's 444 Json Converter</h2>
   <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
-
   <button onclick="selectAllItems()">Select All Items</button>
+  <button onclick="deselectAllItems()">Deselect All Items</button>
   <label>Select Items:</label>
   <div class="scrollbox" id="itemList">
 <label><input type="checkbox" value="item_apple"> Apple</label>
@@ -250,9 +252,6 @@
 <label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
   </div>
 
-  <label>Color Preview</label>
-  <div id="colorPreview"></div>
-
   <div class="row" style="justify-content: space-between;">
     <button class="download-button" onclick="downloadJSON()">Download</button>
     <button onclick="randomStuff()">🎲</button>
@@ -261,7 +260,6 @@
 
 <div class="preview" id="previewPanel">
   <h3>Item Settings</h3>
-  <!-- Tabs inserted dynamically -->
 </div>
 <script>
 function filterItems() {
@@ -276,13 +274,20 @@ function selectAllItems() {
   generateTabs();
 }
 
+function deselectAllItems() {
+  document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = false);
+  generateTabs();
+}
+
 function randomStuff() {
   document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = Math.random() < 0.3);
   generateTabs();
 }
 
-document.querySelectorAll('#itemList').forEach(el => {
-  el.addEventListener('change', generateTabs);
+document.addEventListener("change", function(e) {
+  if (e.target.closest("#itemList")) {
+    generateTabs();
+  }
 });
 
 function generateTabs() {
@@ -294,18 +299,23 @@ function generateTabs() {
     const tab = document.createElement("div");
     tab.className = "tab";
     const name = item.replace("item_", "").replace(/_/g, " ");
+    const hue = Math.floor(Math.random() * 241);
+    const sat = Math.floor(Math.random() * 249) - 124;
+
     tab.innerHTML = `
       <h4>${name}</h4>
       <label>Hue</label>
-      <input type="range" min="0" max="240" value="${Math.floor(Math.random()*240)}" class="hue">
+      <input type="range" min="0" max="240" value="${hue}" class="hue">
       <label>Saturation</label>
-      <input type="range" min="-124" max="124" value="${Math.floor(Math.random()*248 - 124)}" class="saturation">
+      <input type="range" min="-124" max="124" value="${sat}" class="saturation">
       <label>Scale</label>
       <input type="range" min="-127" max="127" value="0" class="scale">
       <label>Count</label>
       <input type="number" min="1" max="500" value="1" class="count">
       <input type="hidden" value="${item}" class="itemID">
+      <div class="colorPreview" style="background: hsl(${hue}, ${Math.round(((sat+124)/248)*100)}%, 50%)"></div>
     `;
+
     preview.appendChild(tab);
   });
 }
