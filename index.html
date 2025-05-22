@@ -22,12 +22,13 @@
       flex: 1;
     }
     .preview {
-      width: 350px;
+      width: 450px;
       max-height: 90vh;
       overflow-y: auto;
       background: rgba(0,0,0,0.6);
-      padding: 10px;
-      border-radius: 10px;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 15px;
     }
     label, input, select, button {
       width: 100%;
@@ -47,30 +48,18 @@
       display: block;
       margin-bottom: 5px;
     }
-    .row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 10px;
-    }
-    .row button {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-    }
     .tab {
       background: #222;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      font-size: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
     }
     .tab h4 {
       margin-top: 0;
       font-size: 18px;
     }
     .tab .colorPreview {
-      height: 30px;
+      height: 35px;
       border-radius: 5px;
       background: gray;
       margin-top: 8px;
@@ -259,7 +248,7 @@
 </div>
 
 <div class="preview" id="previewPanel">
-  <h3>Item Settings</h3>
+  <h3 style="font-size: 22px;">Item Settings</h3>
 </div>
 <script>
 function filterItems() {
@@ -292,7 +281,7 @@ document.addEventListener("change", function(e) {
 
 function generateTabs() {
   const preview = document.getElementById("previewPanel");
-  preview.innerHTML = "<h3>Item Settings</h3>";
+  preview.innerHTML = "<h3 style='font-size:22px;'>Item Settings</h3>";
   const selected = Array.from(document.querySelectorAll('#itemList input:checked')).map(cb => cb.value);
 
   selected.forEach(item => {
@@ -313,11 +302,32 @@ function generateTabs() {
       <label>Count</label>
       <input type="number" min="1" max="500" value="1" class="count">
       <input type="hidden" value="${item}" class="itemID">
-      <div class="colorPreview" style="background: hsl(${hue}, ${Math.round(((sat+124)/248)*100)}%, 50%)"></div>
+      <div class="colorPreview"></div>
     `;
 
     preview.appendChild(tab);
   });
+
+  updateAllPreviews();
+
+  // Attach live update listeners
+  document.querySelectorAll('.tab').forEach(tab => {
+    ['hue', 'saturation'].forEach(cls => {
+      tab.querySelector(`.${cls}`).addEventListener("input", () => updatePreview(tab));
+    });
+  });
+}
+
+function updateAllPreviews() {
+  document.querySelectorAll(".tab").forEach(updatePreview);
+}
+
+function updatePreview(tab) {
+  const hue = parseInt(tab.querySelector(".hue").value);
+  const sat = parseInt(tab.querySelector(".saturation").value);
+  const satPercent = Math.round(((sat + 124) / 248) * 100);
+  const color = `hsl(${hue}, ${satPercent}%, 50%)`;
+  tab.querySelector(".colorPreview").style.backgroundColor = color;
 }
 function downloadJSON() {
   const filename = "custom_items";
