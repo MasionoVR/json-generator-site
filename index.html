@@ -59,6 +59,12 @@
       display: block;
       font-size: 18px;
     }
+    .download-button {
+      font-size: 16px;
+      padding: 12px;
+      font-weight: bold;
+      width: 48%;
+    }
   </style>
 </head>
 <body>
@@ -68,39 +74,166 @@
     <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
     <label>Select Items:</label>
     <div class="scrollbox" id="itemList">
-      <!-- BEGIN ITEM LIST -->
-      <label><input type="checkbox" value="item_apple"> Apple</label>
-      <label><input type="checkbox" value="item_company_ration"> Company Ration</label>
-      <label><input type="checkbox" value="item_company_ration_heal"> Company Ration Heal</label>
-      <label><input type="checkbox" value="item_cracker"> Cracker</label>
-      <label><input type="checkbox" value="item_heart_chocolate_box"> Heart Chocolate Box</label>
-      <label><input type="checkbox" value="item_mega_broccoli"> Mega Broccoli</label>
-      <label><input type="checkbox" value="item_micro_broccoli"> Micro Broccoli</label>
-      <label><input type="checkbox" value="item_pumpkin_pie"> Pumpkin Pie</label>
-      <label><input type="checkbox" value="item_stinky_cheese"> Stinky Cheese</label>
-      <label><input type="checkbox" value="item_turkey_leg"> Turkey Leg</label>
-      <label><input type="checkbox" value="item_turkey_whole"> Turkey Whole</label>
-      <label><input type="checkbox" value="item_banana"> Banana</label>
-      <label><input type="checkbox" value="item_large_banana"> Large Banana</label>
-      <label><input type="checkbox" value="item_cola"> Cola</label>
-      <label><input type="checkbox" value="item_large_cola"> Large Cola</label>
-      <label><input type="checkbox" value="item_pizza"> Pizza</label>
-      <label><input type="checkbox" value="item_backpack"> Backpack</label>
-      <label><input type="checkbox" value="item_large_backpack"> Large Backpack</label>
-      <label><input type="checkbox" value="item_ruby"> Ruby</label>
-      <label><input type="checkbox" value="item_gold_revolver"> Gold Revolver</label>
-      <label><input type="checkbox" value="item_time_bomb"> Time Bomb</label>
-      <label><input type="checkbox" value="item_egg"> Egg</label>
-      <label><input type="checkbox" value="item_pelican_case"> Pelican Case (Suitcase)</label>
-      <label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
-      <label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
-      <!-- Add more items as needed -->
+<label><input type="checkbox" value="item_apple"> Apple</label>
+<label><input type="checkbox" value="item_company_ration"> Company Ration</label>
+<label><input type="checkbox" value="item_company_ration_heal"> Company Ration Heal</label>
+<label><input type="checkbox" value="item_cracker"> Cracker</label>
+<label><input type="checkbox" value="item_heart_chocolate_box"> Heart Chocolate Box</label>
+<label><input type="checkbox" value="item_mega_broccoli"> Mega Broccoli</label>
+<label><input type="checkbox" value="item_micro_broccoli"> Micro Broccoli</label>
+<label><input type="checkbox" value="item_pumpkin_pie"> Pumpkin Pie</label>
+<label><input type="checkbox" value="item_stinky_cheese"> Stinky Cheese</label>
+<label><input type="checkbox" value="item_turkey_leg"> Turkey Leg</label>
+<label><input type="checkbox" value="item_turkey_whole"> Turkey Whole</label>
+<label><input type="checkbox" value="item_banana"> Banana</label>
+<label><input type="checkbox" value="item_large_banana"> Large Banana</label>
+<label><input type="checkbox" value="item_cola"> Cola</label>
+<label><input type="checkbox" value="item_large_cola"> Large Cola</label>
+<label><input type="checkbox" value="item_pizza"> Pizza</label>
+<label><input type="checkbox" value="item_backpack"> Backpack</label>
+<label><input type="checkbox" value="item_large_backpack"> Large Backpack</label>
+<label><input type="checkbox" value="item_large_basketball_print_backpack"> Large Basketball Print Backpack</label>
+<label><input type="checkbox" value="item_large_clover_print_backpack"> Large Clover Print Backpack</label>
+<label><input type="checkbox" value="item_small_backpack"> Small Backpack</label>
+<label><input type="checkbox" value="item_quiver"> Quiver</label>
+<label><input type="checkbox" value="item_heart_quiver"> Heart Quiver</label>
+<label><input type="checkbox" value="item_nut_shredder"> Nut Shredder</label>
+<label><input type="checkbox" value="item_black_backpack"> Black Backpack</label>
+<label><input type="checkbox" value="item_green_backpack"> Green Backpack</label>
+<label><input type="checkbox" value="item_pink_backpack"> Pink Backpack</label>
+<label><input type="checkbox" value="item_white_backpack"> White Backpack</label>
+<label><input type="checkbox" value="item_backpack_with_flashlight"> Backpack with Flashlight</label>
+<label><input type="checkbox" value="item_baseball_bat"> Baseball Bat</label>
+<label><input type="checkbox" value="item_crossbow"> Crossbow</label>
+<label><input type="checkbox" value="item_heart_crossbow"> Heart Crossbow</label>
+<label><input type="checkbox" value="item_crowbar"> Crowbar</label>
+<label><input type="checkbox" value="item_flaregun"> Flaregun</label>
+<label><input type="checkbox" value="item_frying_pan"> Frying Pan</label>
+<label><input type="checkbox" value="item_heart_gun"> Heart Gun</label>
+<label><input type="checkbox" value="item_lance"> Lance</label>
+<label><input type="checkbox" value="item_ogre_hands"> Ogre Hands</label>
+<label><input type="checkbox" value="item_pickaxe"> Pickaxe</label>
+<label><input type="checkbox" value="item_golded_pickaxe"> Golded Pickaxe</label>
+<label><input type="checkbox" value="item_cube_pickaxe"> Cube Pickaxe</label>
+<label><input type="checkbox" value="item_police_baton_crowbar"> Police Baton (Crowbar)</label>
+<label><input type="checkbox" value="item_revolver"> Revolver</label>
+<label><input type="checkbox" value="item_rpg"> RPG</label>
+<label><input type="checkbox" value="item_rocket_dragon_rpg"> Rocket Dragon RPG</label>
+<label><input type="checkbox" value="item_easter_rpg"> Easter RPG</label>
+<label><input type="checkbox" value="item_shield"> Shield</label>
+<label><input type="checkbox" value="item_protective_bone_shield"> Protective Bone Shield</label>
+<label><input type="checkbox" value="item_police_shield"> Police Shield</label>
+<label><input type="checkbox" value="item_shotgun"> Shotgun</label>
+<label><input type="checkbox" value="item_snowball"> Snowball</label>
+<label><input type="checkbox" value="item_arm_bones_stick"> Arm Bones (Stick)</label>
+<label><input type="checkbox" value="item_bone_stick"> Bone (Stick)</label>
+<label><input type="checkbox" value="item_tree_stick"> Tree Stick</label>
+<label><input type="checkbox" value="item_arrow"> Arrow</label>
+<label><input type="checkbox" value="item_heart_arrow"> Heart Arrow</label>
+<label><input type="checkbox" value="item_lightbulb_arrow"> Lightbulb Arrow</label>
+<label><input type="checkbox" value="item_revolver_ammo"> Revolver Ammo</label>
+<label><input type="checkbox" value="item_rpg_rocket"> RPG Rocket</label>
+<label><input type="checkbox" value="item_shotgun_ammo"> Shotgun Ammo</label>
+<label><input type="checkbox" value="item_rope"> Rope</label>
+<label><input type="checkbox" value="item_boombox"> Boombox</label>
+<label><input type="checkbox" value="item_box_fan"> Box Fan</label>
+<label><input type="checkbox" value="item_disposable_camera"> Disposable Camera</label>
+<label><input type="checkbox" value="item_flashlight"> Flashlight</label>
+<label><input type="checkbox" value="item_mega_flashlight"> Mega Flashlight</label>
+<label><input type="checkbox" value="item_glowstick"> Glowstick</label>
+<label><input type="checkbox" value="item_hookshot"> Hookshot</label>
+<label><input type="checkbox" value="item_hoverpad"> Hoverpad</label>
+<label><input type="checkbox" value="item_jetpack"> Jetpack</label>
+<label><input type="checkbox" value="item_plunger"> Plunger</label>
+<label><input type="checkbox" value="item_saddle"> Saddle</label>
+<label><input type="checkbox" value="item_sticker_dispenser"> Sticker Dispenser</label>
+<label><input type="checkbox" value="item_tablet"> Tablet</label>
+<label><input type="checkbox" value="item_tele_grenade"> Tele Grenade</label>
+<label><input type="checkbox" value="item_umbrella"> Umbrella</label>
+<label><input type="checkbox" value="item_clover_umbrella"> Clover Umbrella</label>
+<label><input type="checkbox" value="item_zipline_gun"> Zipline Gun</label>
+<label><input type="checkbox" value="item_balloon"> Balloon</label>
+<label><input type="checkbox" value="item_heart_balloon"> Heart Balloon</label>
+<label><input type="checkbox" value="item_clapper"> Clapper</label>
+<label><input type="checkbox" value="item_football"> Football</label>
+<label><input type="checkbox" value="item_pogostick"> Pogostick</label>
+<label><input type="checkbox" value="item_rubber_ducky"> Rubber Ducky</label>
+<label><input type="checkbox" value="item_theremin"> Theremin</label>
+<label><input type="checkbox" value="item_whoopie"> Whoopie</label>
+<label><input type="checkbox" value="item_cluster_grenade"> Cluster Grenade</label>
+<label><input type="checkbox" value="item_dynamite"> Dynamite</label>
+<label><input type="checkbox" value="item_cube_dynamite"> Cube Dynamite</label>
+<label><input type="checkbox" value="item_flashbang"> Flashbang</label>
+<label><input type="checkbox" value="item_impact_grenade"> Impact Grenade</label>
+<label><input type="checkbox" value="item_impulse_grenade"> Impulse Grenade</label>
+<label><input type="checkbox" value="item_sticky_dynamite"> Sticky Dynamite</label>
+<label><input type="checkbox" value="item_tripwire_explosive"> Tripwire Explosive</label>
+<label><input type="checkbox" value="item_cardboard_box"> Cardboard Box</label>
+<label><input type="checkbox" value="item_cash"> Cash</label>
+<label><input type="checkbox" value="item_cash_pile"> Cash Pile</label>
+<label><input type="checkbox" value="item_cash_mega_pile"> Cash Mega Pile</label>
+<label><input type="checkbox" value="item_calculator"> Calculator</label>
+<label><input type="checkbox" value="item_dvd"> DVD</label>
+<label><input type="checkbox" value="item_floppy_disc_3"> Floppy Disc 3</label>
+<label><input type="checkbox" value="item_floppy_disc_5"> Floppy Disc 5</label>
+<label><input type="checkbox" value="item_keycard"> Keycard</label>
+<label><input type="checkbox" value="item_mug"> Mug</label>
+<label><input type="checkbox" value="item_cinder"> Cinder</label>
+<label><input type="checkbox" value="item_paper"> Paper</label>
+<label><input type="checkbox" value="item_mob_weapons_loot_box"> Mob Weapons Loot Box</label>
+<label><input type="checkbox" value="item_scissors"> Scissors</label>
+<label><input type="checkbox" value="item_stapler"> Stapler</label>
+<label><input type="checkbox" value="item_tape_dispenser"> Tape Dispenser</label>
+<label><input type="checkbox" value="item_time_bomb"> Time Bomb</label>
+<label><input type="checkbox" value="item_cup"> Cup</label>
+<label><input type="checkbox" value="item_golden_cup"> Golden Cup</label>
+<label><input type="checkbox" value="item_sticker_bomb"> Sticker Bomb</label>
+<label><input type="checkbox" value="item_crate"> Crate</label>
+<label><input type="checkbox" value="item_egg"> Egg</label>
+<label><input type="checkbox" value="item_red_flashlight"> Red Flashlight</label>
+<label><input type="checkbox" value="item_gold_bar"> Gold Bar</label>
+<label><input type="checkbox" value="item_heart_chunk"> Heart Chunk</label>
+<label><input type="checkbox" value="item_haunted_house_key"> Haunted House Key</label>
+<label><input type="checkbox" value="item_gold_revolver"> Gold Revolver</label>
+<label><input type="checkbox" value="item_big_cup"> Big Cup</label>
+<label><input type="checkbox" value="item_nut"> Nut</label>
+<label><input type="checkbox" value="item_painting_canvas"> Painting Canvas</label>
+<label><input type="checkbox" value="item_pelican_case"> Pelican Case (Suitcase)</label>
+<label><input type="checkbox" value="item_pipe"> Pipe</label>
+<label><input type="checkbox" value="item_pumpkin_jack"> Pumpkin Jack</label>
+<label><input type="checkbox" value="item_small_pumpkin_jack"> Small Pumpkin Jack</label>
+<label><input type="checkbox" value="item_big_mob_loot_box"> Big Mob Loot Box</label>
+<label><input type="checkbox" value="item_mob_loot_box"> Mob Loot Box</label>
+<label><input type="checkbox" value="item_small_mob_loot_box"> Small Mob Loot Box</label>
+<label><input type="checkbox" value="item_scanner"> Scanner</label>
+<label><input type="checkbox" value="item_toilet_paper"> Toilet Paper</label>
+<label><input type="checkbox" value="item_mega_toilet_paper"> Mega Toilet Paper</label>
+<label><input type="checkbox" value="item_empty_toilet_paper_roll"> Empty Toilet Paper Roll</label>
+<label><input type="checkbox" value="item_trophy"> Trophy</label>
+<label><input type="checkbox" value="item_unknown_item"> Unknown Item</label>
+<label><input type="checkbox" value="item_upsidedown_loot"> Upsidedown Loot</label>
+<label><input type="checkbox" value="item_large_uranium_chunk"> Large Uranium Chunk</label>
+<label><input type="checkbox" value="item_uranium_chunk"> Uranium Chunk</label>
+<label><input type="checkbox" value="item_small_uranium_chunk"> Small Uranium Chunk</label>
+<label><input type="checkbox" value="item_ruby"> Ruby</label>
+<label><input type="checkbox" value="item_large_silver_chunk"> Large Silver Chunk</label>
+<label><input type="checkbox" value="item_silver_chunk"> Silver Chunk</label>
+<label><input type="checkbox" value="item_small_silver_chunk"> Small Silver Chunk</label>
+<label><input type="checkbox" value="item_large_copper_chunk"> Large Copper Chunk</label>
+<label><input type="checkbox" value="item_copper_chunk"> Copper Chunk</label>
+<label><input type="checkbox" value="item_small_copper_chunk"> Small Copper Chunk</label>
+<label><input type="checkbox" value="item_large_gold_chunk"> Large Gold Chunk</label>
+<label><input type="checkbox" value="item_gold_chunk"> Gold Chunk</label>
+<label><input type="checkbox" value="item_small_gold_chunk"> Small Gold Chunk</label>
+<label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
+<label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
     </div>
 
     <label>Hue: <span id="hueVal">0</span></label>
     <div class="row">
       <input type="range" id="hue" min="0" max="240" value="0" oninput="updateValue('hue')">
       <button onclick="randomHue()">🎨</button>
+      <button onclick="randomBoth()">🎯</button>
     </div>
 
     <label>Saturation: <span id="saturationVal">0</span></label>
@@ -132,10 +265,10 @@
     <div id="colorPreview"></div>
 
     <div class="row" style="justify-content: space-between;">
-      <button onclick="downloadJSON()">Download</button>
+      <button class="download-button" onclick="downloadJSON()">Download</button>
       <button onclick="randomStuff()">🎲</button>
     </div>
-  </div> <!-- end of .container -->
+  </div> <!-- end of container -->
 
   <script>
     function updateValue(id) {
@@ -160,6 +293,11 @@
       updateValue("saturation");
     }
 
+    function randomBoth() {
+      randomHue();
+      randomSaturation();
+    }
+
     function randomScale() {
       document.getElementById("scale").value = Math.floor(Math.random() * 255) - 127;
       updateValue("scale");
@@ -167,7 +305,8 @@
 
     function randomStuff() {
       document.querySelectorAll('#itemList input').forEach(cb => cb.checked = Math.random() < 0.3);
-      randomHue(); randomSaturation(); randomScale();
+      randomBoth();
+      randomScale();
     }
 
     function filterItems() {
