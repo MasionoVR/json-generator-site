@@ -81,6 +81,9 @@
   <button onclick="selectAllItems()">Select All Items</button>
   <button onclick="deselectAllItems()">Deselect All Items</button>
 
+  <label for="filename">Download As</label>
+  <input type="text" id="filename" value="custom_items">
+
   <label>Backpacks: <span id="backpackCountVal">1</span></label>
   <input type="range" id="backpackCount" min="1" max="28" value="1" oninput="updateSlider('backpackCount')">
 
@@ -240,10 +243,9 @@
 <label><input type="checkbox" value="item_large_gold_chunk"> Large Gold Chunk</label>
 <label><input type="checkbox" value="item_gold_chunk"> Gold Chunk</label>
 <label><input type="checkbox" value="item_small_gold_chunk"> Small Gold Chunk</label>
-<label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
-<label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
+    <label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
+    <label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
   </div>
-
   <div class="row" style="justify-content: space-between;">
     <button class="download-button" onclick="downloadJSON()">Download</button>
     <button onclick="randomStuff()">🎲</button>
@@ -288,12 +290,12 @@ function randomStuff() {
   document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = Math.random() < 0.3);
   generateTabs();
 }
+
 document.addEventListener("change", function(e) {
   if (e.target.closest("#itemList")) {
     generateTabs();
   }
 });
-
 function generateTabs() {
   const preview = document.getElementById("previewPanel");
   preview.innerHTML = "<h3 style='font-size:22px;'>Item Settings</h3>";
@@ -315,7 +317,7 @@ function generateTabs() {
       <label>Scale</label>
       <input type="range" min="-127" max="127" value="0" class="scale">
       <label>Count</label>
-      <input type="number" min="1" max="500" value="1" class="count">
+      <input type="number" min="1" max="28" value="1" class="count">
       <input type="hidden" value="${item}" class="itemID">
       <div class="colorPreview"></div>
     `;
@@ -342,28 +344,29 @@ function updatePreview(tab) {
   const color = `hsl(${hue}, ${satPercent}%, 50%)`;
   tab.querySelector(".colorPreview").style.backgroundColor = color;
 }
-function chunkArray(array, size) {
+function chunkArray(arr, size) {
   const chunks = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
   }
   return chunks;
 }
 
-function getCurrentRayguns() {
+function downloadJSON() {
+  const filename = document.getElementById("filename").value || "custom_items";
+  const backpackCount = parseInt(document.getElementById("backpackCount").value);
   const tabs = document.querySelectorAll(".tab");
-  const raygunCount = parseInt(document.getElementById("raygunCount").value);
-  const raygunsWithItems = [];
+  const rayguns = [];
 
   tabs.forEach(tab => {
     const itemID = tab.querySelector(".itemID").value;
     const hue = parseInt(tab.querySelector(".hue").value);
     const sat = parseInt(tab.querySelector(".saturation").value);
     const scale = parseInt(tab.querySelector(".scale").value);
-    const count = parseInt(tab.querySelector(".count").value);
+    const count = Math.min(parseInt(tab.querySelector(".count").value), 28);
 
-    for (let i = 0; i < count * raygunCount; i++) {
-      raygunsWithItems.push({
+    for (let i = 0; i < count; i++) {
+      rayguns.push({
         itemID: "item_heart_gun",
         children: [
           {
@@ -377,42 +380,7 @@ function getCurrentRayguns() {
     }
   });
 
-  return raygunsWithItems;
-}
-function downloadJSON() {
-  const filename = "custom_items";
-  const backpackCount = parseInt(document.getElementById("backpackCount").value);
-  const tabs = document.querySelectorAll(".tab");
-
-  const rayguns = Array.from(tabs).map(tab => {
-    const itemID = tab.querySelector(".itemID").value;
-    const hue = parseInt(tab.querySelector(".hue").value);
-    const sat = parseInt(tab.querySelector(".saturation").value);
-    const scale = parseInt(tab.querySelector(".scale").value);
-    return {
-      itemID: "item_heart_gun",
-      children: [
-        {
-          itemID: itemID,
-          colorHue: hue,
-          colorSaturation: sat,
-          scaleModifier: scale
-        }
-      ]
-    };
-  });
-
-  // Split into groups of 24
-  const chunkArray = (arr, size) => {
-    const chunks = [];
-    for (let i = 0; i < arr.length; i += size) {
-      chunks.push(arr.slice(i, i + size));
-    }
-    return chunks;
-  };
-
   const raygunChunks = chunkArray(rayguns, 24);
-
   const backpackChildren = raygunChunks.slice(0, backpackCount).map(chunk => ({
     itemID: "item_heart_gun",
     children: [
@@ -434,11 +402,9 @@ function downloadJSON() {
     ]
   };
 
-  // Store undo state
   undoStack.push(JSON.stringify(output));
   redoStack.length = 0;
 
-  // Download JSON
   const blob = new Blob([JSON.stringify(output, null, 4)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -486,7 +452,7 @@ function addRandomRayguns() {
       <label>Scale</label>
       <input type="range" min="-127" max="127" value="0" class="scale">
       <label>Count</label>
-      <input type="number" min="1" max="500" value="1" class="count">
+      <input type="number" min="1" max="28" value="1" class="count">
       <input type="hidden" value="${item}" class="itemID">
       <div class="colorPreview"></div>
     `;
