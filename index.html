@@ -10,12 +10,23 @@
       background-size: cover;
       color: white;
       padding: 20px;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
     }
     .container {
       max-width: 600px;
-      margin: auto;
       background: rgba(30, 30, 30, 0.9);
       padding: 20px;
+      border-radius: 10px;
+      flex: 1;
+    }
+    .preview {
+      width: 300px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
       border-radius: 10px;
     }
     label, input, select, button {
@@ -59,6 +70,15 @@
       display: block;
       font-size: 18px;
     }
+    .tab {
+      background: #222;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    .tab h4 {
+      margin-top: 0;
+    }
     .download-button {
       font-size: 16px;
       padding: 12px;
@@ -68,12 +88,13 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Masiono's 444 Json Converter</h2>
+<div class="container">
+  <h2>Masiono's 444 Json Converter</h2>
+  <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
 
-    <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
-    <label>Select Items:</label>
-    <div class="scrollbox" id="itemList">
+  <button onclick="selectAllItems()">Select All Items</button>
+  <label>Select Items:</label>
+  <div class="scrollbox" id="itemList">
 <label><input type="checkbox" value="item_apple"> Apple</label>
 <label><input type="checkbox" value="item_company_ration"> Company Ration</label>
 <label><input type="checkbox" value="item_company_ration_heal"> Company Ration Heal</label>
@@ -227,149 +248,121 @@
 <label><input type="checkbox" value="item_small_gold_chunk"> Small Gold Chunk</label>
 <label><input type="checkbox" value="item_arena_shotgun"> Arena Shotgun</label>
 <label><input type="checkbox" value="item_arena_revolver"> Arena Revolver</label>
-    </div>
+  </div>
 
-    <label>Hue: <span id="hueVal">0</span></label>
-    <div class="row">
-      <input type="range" id="hue" min="0" max="240" value="0" oninput="updateValue('hue')">
-      <button onclick="randomHue()">🎨</button>
-      <button onclick="randomBoth()">🎯</button>
-    </div>
+  <label>Color Preview</label>
+  <div id="colorPreview"></div>
 
-    <label>Saturation: <span id="saturationVal">0</span></label>
-    <div class="row">
-      <input type="range" id="saturation" min="-124" max="124" value="0" oninput="updateValue('saturation')">
-      <button onclick="randomSaturation()">🎨</button>
-    </div>
+  <div class="row" style="justify-content: space-between;">
+    <button class="download-button" onclick="downloadJSON()">Download</button>
+    <button onclick="randomStuff()">🎲</button>
+  </div>
+</div>
 
-    <label>Size: <span id="scaleVal">0</span></label>
-    <div class="row">
-      <input type="range" id="scale" min="-127" max="127" value="0" oninput="updateValue('scale')">
-      <button onclick="randomScale()">🎲</button>
-    </div>
+<div class="preview" id="previewPanel">
+  <h3>Item Settings</h3>
+  <!-- Tabs inserted dynamically -->
+</div>
+<script>
+function filterItems() {
+  const input = document.getElementById("searchInput").value.toLowerCase();
+  document.querySelectorAll("#itemList label").forEach(label => {
+    label.style.display = label.textContent.toLowerCase().includes(input) ? "block" : "none";
+  });
+}
 
-    <label>Rayguns per Backpack: <span id="raygunCountVal">1</span></label>
-    <div class="row">
-      <input type="range" id="raygunCount" min="1" max="28" value="1" oninput="updateValue('raygunCount')">
-    </div>
+function selectAllItems() {
+  document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = true);
+  generateTabs();
+}
 
-    <label>Backpacks: <span id="countVal">1</span></label>
-    <div class="row">
-      <input type="range" id="count" min="1" max="28" value="1" oninput="updateValue('count')">
-    </div>
+function randomStuff() {
+  document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = Math.random() < 0.3);
+  generateTabs();
+}
 
-    <label for="filename">Download As</label>
-    <input type="text" id="filename" value="custom_items">
+document.querySelectorAll('#itemList').forEach(el => {
+  el.addEventListener('change', generateTabs);
+});
 
-    <label>Color Preview</label>
-    <div id="colorPreview"></div>
+function generateTabs() {
+  const preview = document.getElementById("previewPanel");
+  preview.innerHTML = "<h3>Item Settings</h3>";
+  const selected = Array.from(document.querySelectorAll('#itemList input:checked')).map(cb => cb.value);
 
-    <div class="row" style="justify-content: space-between;">
-      <button class="download-button" onclick="downloadJSON()">Download</button>
-      <button onclick="randomStuff()">🎲</button>
-    </div>
-  </div> <!-- end of container -->
+  selected.forEach(item => {
+    const tab = document.createElement("div");
+    tab.className = "tab";
+    const name = item.replace("item_", "").replace(/_/g, " ");
+    tab.innerHTML = `
+      <h4>${name}</h4>
+      <label>Hue</label>
+      <input type="range" min="0" max="240" value="${Math.floor(Math.random()*240)}" class="hue">
+      <label>Saturation</label>
+      <input type="range" min="-124" max="124" value="${Math.floor(Math.random()*248 - 124)}" class="saturation">
+      <label>Scale</label>
+      <input type="range" min="-127" max="127" value="0" class="scale">
+      <label>Count</label>
+      <input type="number" min="1" max="500" value="1" class="count">
+      <input type="hidden" value="${item}" class="itemID">
+    `;
+    preview.appendChild(tab);
+  });
+}
+function downloadJSON() {
+  const filename = "custom_items";
+  const tabs = document.querySelectorAll(".tab");
+  const innerItems = [];
 
-  <script>
-    function updateValue(id) {
-      document.getElementById(id + 'Val').textContent = document.getElementById(id).value;
-      updateColorPreview();
-    }
+  tabs.forEach(tab => {
+    const itemID = tab.querySelector(".itemID").value;
+    const hue = parseInt(tab.querySelector(".hue").value);
+    const sat = parseInt(tab.querySelector(".saturation").value);
+    const scale = parseInt(tab.querySelector(".scale").value);
+    const count = parseInt(tab.querySelector(".count").value);
 
-    function updateColorPreview() {
-      const hue = parseInt(document.getElementById("hue").value);
-      const sat = parseInt(document.getElementById("saturation").value);
-      const scaledSat = Math.round(((sat + 124) / 248) * 100);
-      document.getElementById("colorPreview").style.backgroundColor = `hsl(${hue}, ${scaledSat}%, 50%)`;
-    }
-
-    function randomHue() {
-      document.getElementById("hue").value = Math.floor(Math.random() * 241);
-      updateValue("hue");
-    }
-
-    function randomSaturation() {
-      document.getElementById("saturation").value = Math.floor(Math.random() * 249) - 124;
-      updateValue("saturation");
-    }
-
-    function randomBoth() {
-      randomHue();
-      randomSaturation();
-    }
-
-    function randomScale() {
-      document.getElementById("scale").value = Math.floor(Math.random() * 255) - 127;
-      updateValue("scale");
-    }
-
-    function randomStuff() {
-      document.querySelectorAll('#itemList input').forEach(cb => cb.checked = Math.random() < 0.3);
-      randomBoth();
-      randomScale();
-    }
-
-    function filterItems() {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const labels = document.querySelectorAll("#itemList label");
-      labels.forEach(label => {
-        label.style.display = label.textContent.toLowerCase().includes(input) ? "block" : "none";
-      });
-    }
-
-    function downloadJSON() {
-      const hue = parseInt(document.getElementById("hue").value);
-      const saturation = parseInt(document.getElementById("saturation").value);
-      const scale = parseInt(document.getElementById("scale").value);
-      const raygunCount = parseInt(document.getElementById("raygunCount").value);
-      const count = parseInt(document.getElementById("count").value);
-      const filename = document.getElementById("filename").value || "custom_items";
-      const selected = Array.from(document.querySelectorAll('#itemList input:checked')).map(cb => cb.value);
-
-      const rays = [];
-      for (let i = 0; i < raygunCount; i++) {
-        for (const item of selected) {
-          rays.push({
-            itemID: "item_heart_gun",
-            children: [
-              {
-                itemID: item,
-                colorHue: hue,
-                colorSaturation: saturation,
-                scaleModifier: scale
-              }
-            ]
-          });
-        }
-      }
-
-      const raygunWithBackpack = {
+    for (let i = 0; i < count; i++) {
+      innerItems.push({
         itemID: "item_heart_gun",
         children: [
           {
-            itemID: "item_backpack_large_base",
-            children: rays
+            itemID: itemID,
+            colorHue: hue,
+            colorSaturation: sat,
+            scaleModifier: scale
           }
         ]
-      };
-
-      const output = {
-        version: 1,
-        items: [
-          {
-            itemID: "item_backpack_large_base",
-            children: Array(count).fill(raygunWithBackpack),
-            stashPos: 0
-          }
-        ]
-      };
-
-      const blob = new Blob([JSON.stringify(output, null, 4)], { type: "application/json" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename + ".json";
-      link.click();
+      });
     }
-  </script>
+  });
+
+  const output = {
+    version: 1,
+    items: [
+      {
+        itemID: "item_backpack_large_base",
+        children: [
+          {
+            itemID: "item_heart_gun",
+            children: [
+              {
+                itemID: "item_backpack_large_base",
+                children: innerItems
+              }
+            ]
+          }
+        ],
+        stashPos: 0
+      }
+    ]
+  };
+
+  const blob = new Blob([JSON.stringify(output, null, 4)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename + ".json";
+  link.click();
+}
+</script>
 </body>
 </html>
