@@ -379,14 +379,41 @@ function getCurrentRayguns() {
 
   return raygunsWithItems;
 }
-
 function downloadJSON() {
   const filename = "custom_items";
   const backpackCount = parseInt(document.getElementById("backpackCount").value);
-  const rayguns = getCurrentRayguns();
+  const tabs = document.querySelectorAll(".tab");
+
+  const rayguns = Array.from(tabs).map(tab => {
+    const itemID = tab.querySelector(".itemID").value;
+    const hue = parseInt(tab.querySelector(".hue").value);
+    const sat = parseInt(tab.querySelector(".saturation").value);
+    const scale = parseInt(tab.querySelector(".scale").value);
+    return {
+      itemID: "item_heart_gun",
+      children: [
+        {
+          itemID: itemID,
+          colorHue: hue,
+          colorSaturation: sat,
+          scaleModifier: scale
+        }
+      ]
+    };
+  });
+
+  // Split into groups of 24
+  const chunkArray = (arr, size) => {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += size) {
+      chunks.push(arr.slice(i, i + size));
+    }
+    return chunks;
+  };
+
   const raygunChunks = chunkArray(rayguns, 24);
 
-  const filledBackpacks = raygunChunks.map(chunk => ({
+  const backpackChildren = raygunChunks.slice(0, backpackCount).map(chunk => ({
     itemID: "item_heart_gun",
     children: [
       {
@@ -395,8 +422,6 @@ function downloadJSON() {
       }
     ]
   }));
-
-  const backpackChildren = filledBackpacks.slice(0, backpackCount);
 
   const output = {
     version: 1,
@@ -409,9 +434,11 @@ function downloadJSON() {
     ]
   };
 
+  // Store undo state
   undoStack.push(JSON.stringify(output));
   redoStack.length = 0;
 
+  // Download JSON
   const blob = new Blob([JSON.stringify(output, null, 4)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
