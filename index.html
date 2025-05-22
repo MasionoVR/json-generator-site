@@ -28,7 +28,6 @@
       background: rgba(0,0,0,0.6);
       padding: 15px;
       border-radius: 12px;
-      font-size: 15px;
     }
     label, input, select, button {
       width: 100%;
@@ -43,10 +42,6 @@
       padding: 10px;
       background: #1a1a1a;
       border-radius: 5px;
-    }
-    .scrollbox label {
-      display: block;
-      margin-bottom: 5px;
     }
     .tab {
       background: #222;
@@ -81,9 +76,16 @@
 <body>
 <div class="container">
   <h2>Masiono's 444 Json Converter</h2>
+
   <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
   <button onclick="selectAllItems()">Select All Items</button>
   <button onclick="deselectAllItems()">Deselect All Items</button>
+
+  <label>Backpacks: <span id="backpackCountVal">1</span></label>
+  <input type="range" id="backpackCount" min="1" max="28" value="1" oninput="updateSlider('backpackCount')">
+
+  <label>Rayguns per Backpack: <span id="raygunCountVal">1</span></label>
+  <input type="range" id="raygunCount" min="1" max="28" value="1" oninput="updateSlider('raygunCount')">
   <label>Select Items:</label>
   <div class="scrollbox" id="itemList">
 <label><input type="checkbox" value="item_apple"> Apple</label>
@@ -268,6 +270,10 @@ function deselectAllItems() {
   generateTabs();
 }
 
+function updateSlider(id) {
+  document.getElementById(id + "Val").textContent = document.getElementById(id).value;
+}
+
 function randomStuff() {
   document.querySelectorAll('#itemList input[type=checkbox]').forEach(cb => cb.checked = Math.random() < 0.3);
   generateTabs();
@@ -309,8 +315,6 @@ function generateTabs() {
   });
 
   updateAllPreviews();
-
-  // Attach live update listeners
   document.querySelectorAll('.tab').forEach(tab => {
     ['hue', 'saturation'].forEach(cls => {
       tab.querySelector(`.${cls}`).addEventListener("input", () => updatePreview(tab));
@@ -332,7 +336,9 @@ function updatePreview(tab) {
 function downloadJSON() {
   const filename = "custom_items";
   const tabs = document.querySelectorAll(".tab");
-  const innerItems = [];
+  const raygunCount = parseInt(document.getElementById("raygunCount").value);
+  const backpackCount = parseInt(document.getElementById("backpackCount").value);
+  const raygunsWithItems = [];
 
   tabs.forEach(tab => {
     const itemID = tab.querySelector(".itemID").value;
@@ -342,7 +348,7 @@ function downloadJSON() {
     const count = parseInt(tab.querySelector(".count").value);
 
     for (let i = 0; i < count; i++) {
-      innerItems.push({
+      raygunsWithItems.push({
         itemID: "item_heart_gun",
         children: [
           {
@@ -356,22 +362,27 @@ function downloadJSON() {
     }
   });
 
+  const raygunBlock = [];
+  for (let i = 0; i < raygunCount; i++) {
+    raygunBlock.push(...raygunsWithItems);
+  }
+
+  const nestedBackpack = {
+    itemID: "item_heart_gun",
+    children: [
+      {
+        itemID: "item_backpack_large_base",
+        children: raygunBlock
+      }
+    ]
+  };
+
   const output = {
     version: 1,
     items: [
       {
         itemID: "item_backpack_large_base",
-        children: [
-          {
-            itemID: "item_heart_gun",
-            children: [
-              {
-                itemID: "item_backpack_large_base",
-                children: innerItems
-              }
-            ]
-          }
-        ],
+        children: Array(backpackCount).fill(nestedBackpack),
         stashPos: 0
       }
     ]
