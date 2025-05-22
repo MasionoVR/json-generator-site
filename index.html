@@ -71,9 +71,29 @@
       font-weight: bold;
       width: 48%;
     }
+    .decor-top-left, .decor-bottom-right {
+      position: fixed;
+      opacity: 0.7;
+      z-index: 0;
+    }
+    .decor-top-left {
+      top: 20px;
+      left: 20px;
+      width: 120px;
+    }
+    .decor-bottom-right {
+      bottom: 20px;
+      right: 20px;
+      width: 150px;
+    }
   </style>
 </head>
 <body>
+
+<!-- Decorative Images -->
+<img src="file-9LAeiVMcQXUokYbi3E7SsX" class="decor-top-left" alt="Animal Company">
+<img src="file-3fWqi8pHJcwS8zXbocW3FQ" class="decor-bottom-right" alt="Animal Company">
+
 <div class="container">
   <h2>Masiono's 444 Json Converter</h2>
 
@@ -341,8 +361,7 @@ function updatePreview(tab) {
   const hue = parseInt(tab.querySelector(".hue").value);
   const sat = parseInt(tab.querySelector(".saturation").value);
   const satPercent = Math.round(((sat + 124) / 248) * 100);
-  const color = `hsl(${hue}, ${satPercent}%, 50%)`;
-  tab.querySelector(".colorPreview").style.backgroundColor = color;
+  tab.querySelector(".colorPreview").style.backgroundColor = `hsl(${hue}, ${satPercent}%, 50%)`;
 }
 function chunkArray(arr, size) {
   const chunks = [];
@@ -381,6 +400,7 @@ function downloadJSON() {
   });
 
   const raygunChunks = chunkArray(rayguns, 24);
+
   const backpackChildren = raygunChunks.slice(0, backpackCount).map(chunk => ({
     itemID: "item_heart_gun",
     children: [
