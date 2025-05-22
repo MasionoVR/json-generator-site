@@ -338,9 +338,10 @@ function downloadJSON() {
   const tabs = document.querySelectorAll(".tab");
   const raygunCount = parseInt(document.getElementById("raygunCount").value);
   const backpackCount = parseInt(document.getElementById("backpackCount").value);
-  const raygunsWithItems = [];
 
-  // Build rayguns with selected item children
+  const allRayguns = [];
+
+  // Generate all rayguns based on selected items
   tabs.forEach(tab => {
     const itemID = tab.querySelector(".itemID").value;
     const hue = parseInt(tab.querySelector(".hue").value);
@@ -348,8 +349,8 @@ function downloadJSON() {
     const scale = parseInt(tab.querySelector(".scale").value);
     const count = parseInt(tab.querySelector(".count").value);
 
-    for (let i = 0; i < count; i++) {
-      raygunsWithItems.push({
+    for (let i = 0; i < count * raygunCount; i++) {
+      allRayguns.push({
         itemID: "item_heart_gun",
         children: [
           {
@@ -363,24 +364,30 @@ function downloadJSON() {
     }
   });
 
-  const raygunBlock = [];
-  for (let i = 0; i < raygunCount; i++) {
-    raygunBlock.push(...raygunsWithItems);
+  // Group rayguns into chunks of 24 per backpack
+  function chunkArray(array, size) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
   }
 
-  // Create N backpacks that go inside one top-level backpack
-  const backpackChildren = [];
-  for (let i = 0; i < backpackCount; i++) {
-    backpackChildren.push({
-      itemID: "item_heart_gun",
-      children: [
-        {
-          itemID: "item_backpack_large_base",
-          children: raygunBlock
-        }
-      ]
-    });
-  }
+  const raygunChunks = chunkArray(allRayguns, 24);
+
+  // Wrap each chunk in a backpack
+  const filledBackpacks = raygunChunks.map(chunk => ({
+    itemID: "item_heart_gun",
+    children: [
+      {
+        itemID: "item_backpack_large_base",
+        children: chunk
+      }
+    ]
+  }));
+
+  // Only take up to `backpackCount` backpacks
+  const backpackChildren = filledBackpacks.slice(0, backpackCount);
 
   const output = {
     version: 1,
